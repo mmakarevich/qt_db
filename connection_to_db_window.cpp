@@ -28,11 +28,11 @@ void Connection_to_db_window::on_test_button_clicked()
 {
     if(ui->comboBox->currentText()=="mysql")
     {
-//        ui->lineEdit_db_name->setText("test");//автозаполнение для теста
-//        ui->lineEdit_host->setText("127.0.0.1");//автозаполнение для теста
-//        ui->lineEdit_port->setText("3306");//автозаполнение для теста
-//        ui->lineEdit_username->setText("root");//автозаполнение для теста
-//        ui->lineEdit_password->setText("root");//автозаполнение для теста
+        ui->lineEdit_db_name->setText("test");//автозаполнение для теста
+        ui->lineEdit_host->setText("127.0.0.1");//автозаполнение для теста
+        ui->lineEdit_port->setText("3306");//автозаполнение для теста
+        ui->lineEdit_username->setText("root");//автозаполнение для теста
+        ui->lineEdit_password->setText("root");//автозаполнение для теста
 
         con = new Connection_to_db();
         con->set_type_name("QMYSQL");
@@ -55,7 +55,7 @@ void Connection_to_db_window::on_test_button_clicked()
     else if(ui->comboBox->currentText()=="sqlite")
     {
 
-        //ui->lineEdit_db_name->setText("C:/Users/HOME/Documents/build-basa_1_test-Desktop_Qt_5_8_0_MinGW_32bit-Debug/mydatabase.sqlite");//автозаполнение для теста
+        ui->lineEdit_db_name->setText("mydatabase.sqlite");//автозаполнение для теста
 
         con = new Connection_to_db();
         con->set_type_name("QSQLITE");
