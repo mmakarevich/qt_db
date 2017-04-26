@@ -28,42 +28,45 @@ void Connection_to_db_window::on_test_button_clicked()
 {
     if(ui->comboBox->currentText()=="mysql")
     {
-        ui->lineEdit_db_name->setText("test");//автозаполнение для теста
-        ui->lineEdit_host->setText("127.0.0.1");//автозаполнение для теста
-        ui->lineEdit_port->setText("3306");//автозаполнение для теста
-        ui->lineEdit_username->setText("root");//автозаполнение для теста
-        ui->lineEdit_password->setText("root");//автозаполнение для теста
+//        ui->lineEdit_db_name->setText("test");//автозаполнение для теста
+//        ui->lineEdit_host->setText("127.0.0.1");//автозаполнение для теста
+//        ui->lineEdit_port->setText("3306");//автозаполнение для теста
+//        ui->lineEdit_username->setText("root");//автозаполнение для теста
+//        ui->lineEdit_password->setText("root");//автозаполнение для теста
 
-        con.set_type_name("QMYSQL");
-        con.set_db_name(ui->lineEdit_db_name->text());
-        con.set_host(ui->lineEdit_host->text());
-        con.set_port(ui->lineEdit_port->text().toInt());
-        con.set_user(ui->lineEdit_username->text());
-        con.set_password(ui->lineEdit_password->text());
-        bool ok = con.connect();
+        con = new Connection_to_db();
+        con->set_type_name("QMYSQL");
+        con->set_db_name(ui->lineEdit_db_name->text());
+        con->set_host(ui->lineEdit_host->text());
+        con->set_port(ui->lineEdit_port->text().toInt());
+        con->set_user(ui->lineEdit_username->text());
+        con->set_password(ui->lineEdit_password->text());
+        bool ok = con->connect();
         if(!ok)
         {
             QMessageBox::warning(this,"Error mysql connection","Проверьте введенные данные!");
 
         }
-        else QMessageBox::information(this,"Error mysql connection","TEST OK!");
-        con.close();
+        else QMessageBox::information(this,"mysql connection","TEST OK!");
+        con->close();
 
 
     }
     else if(ui->comboBox->currentText()=="sqlite")
     {
-        ui->lineEdit_db_name->setText("C:/Users/HOME/Documents/build-basa_1_test-Desktop_Qt_5_8_0_MinGW_32bit-Debug/mydatabase.sqlite");//автозаполнение для теста
 
-        con.set_type_name("QSQLITE");
-        con.set_db_name(ui->lineEdit_db_name->text());
-        bool ok = con.connect();
+        //ui->lineEdit_db_name->setText("C:/Users/HOME/Documents/build-basa_1_test-Desktop_Qt_5_8_0_MinGW_32bit-Debug/mydatabase.sqlite");//автозаполнение для теста
+
+        con = new Connection_to_db();
+        con->set_type_name("QSQLITE");
+        con->set_db_name(ui->lineEdit_db_name->text());
+        bool ok = con->connect();
         if(!ok)
         {
             QMessageBox::warning(this,"Error sqlite connection","Проверьте введенные данные!");
         }
-        else QMessageBox::information(this,"Error mysql connection","TEST OK!");
-        con.close();
+        else QMessageBox::information(this,"sqlite connection","TEST OK!");
+        con->close();
 
     }
 

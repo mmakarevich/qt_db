@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>708</width>
-    <height>466</height>
+    <height>471</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -229,56 +229,6 @@
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
-          <widget class="QLabel" name="label">
-           <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
-           </property>
-           <property name="text">
-            <string>                        save table to file</string>
-           </property>
-           <property name="textFormat">
-            <enum>Qt::AutoText</enum>
-           </property>
-           <property name="scaledContents">
-            <bool>false</bool>
-           </property>
-          </widget>
-          <widget class="QWidget" name="layoutWidget">
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_4">
-              <item>
-               <widget class="QLabel" name="label_4">
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="add_filename_line"/>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_5">
-              <item>
-               <widget class="QPushButton" name="save_as_file_button">
-                <property name="text">
-                 <string>as .csv</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="save_as_jpg_file">
-                <property name="text">
-                 <string>as .jpg</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
          </widget>
         </widget>
        </item>
@@ -312,8 +262,70 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menumenu">
+    <property name="title">
+     <string>menu</string>
+    </property>
+    <addaction name="action_save_file"/>
+    <addaction name="separator"/>
+    <addaction name="actionclose_2"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuhelp">
+    <property name="title">
+     <string>help</string>
+    </property>
+    <addaction name="actionabout"/>
+    <addaction name="actionabout_QT"/>
+    <addaction name="actionAPI_QT"/>
+   </widget>
+   <addaction name="menumenu"/>
+   <addaction name="menuhelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionclose">
+   <property name="text">
+    <string>close</string>
+   </property>
+  </action>
+  <action name="actionabout">
+   <property name="text">
+    <string>about</string>
+   </property>
+  </action>
+  <action name="actionabout_QT">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>about QT</string>
+   </property>
+  </action>
+  <action name="actionAPI_QT">
+   <property name="text">
+    <string>Developer docs</string>
+   </property>
+  </action>
+  <action name="actionclose_2">
+   <property name="text">
+    <string>close</string>
+   </property>
+  </action>
+  <action name="actionsave_as_csv">
+   <property name="text">
+    <string>save as .csv</string>
+   </property>
+  </action>
+  <action name="actionsave_as_jpg">
+   <property name="text">
+    <string>save as .jpg</string>
+   </property>
+  </action>
+  <action name="action_save_file">
+   <property name="text">
+    <string>save</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

@@ -33,7 +33,8 @@ bool Connection_to_db::connect()
 }
 void Connection_to_db::close()
 {
-    this->mydb.close();
+    this->mydb.removeDatabase(mydb.connectionName());
+    qDebug()<<"connection close !";
 }
 void Connection_to_db::set_db_name(QString name)
 {

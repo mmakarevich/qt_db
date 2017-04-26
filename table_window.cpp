@@ -7,6 +7,7 @@
 #include "ui_table_window.h"
 
 
+
 Table_window::Table_window(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Table_window)
@@ -16,6 +17,8 @@ Table_window::Table_window(QWidget *parent) :
 
     this -> setTrayIconActions();//трей
     this -> showTrayIcon();
+
+
 
 }
 
@@ -41,18 +44,18 @@ void Table_window::on_load_data_button_clicked()
 
 void Table_window::on_add_column_button_clicked()
 {
-    if(this->main_conn->get_type_db()=="QMYSQL")
+    if(this->active_connection_to_db->get_type_db()=="QMYSQL")
     {
-        QSqlQuery *qry = new QSqlQuery(this->main_conn->get_database());
+        QSqlQuery *qry = new QSqlQuery(this->active_connection_to_db->get_database());
         QString str = ui->add_column_data->date().toString("dd_MM_yyyy");
         qry->prepare("ALTER TABLE "+ui->comboBox->currentText()+" ADD "+str+" VARCHAR(5)");
         qry->exec();
         QMessageBox::information(this,"add column","added column "+str+"\n"+"reload data!");
     }
 
-    if(this->main_conn->get_type_db()=="QSQLITE")
+    if(this->active_connection_to_db->get_type_db()=="QSQLITE")
     {
-        QSqlQuery *qry = new QSqlQuery(this->main_conn->get_database());
+        QSqlQuery *qry = new QSqlQuery(this->active_connection_to_db->get_database());
         QString str = ui->add_column_data->date().toString("dd_MM_yyyy");
         qry->prepare("ALTER TABLE "+ui->comboBox->currentText()+" ADD '"+str+"' VARCHAR(5)");
         qry->exec();
@@ -82,17 +85,17 @@ void Table_window::on_delete_row_button_clicked()
      удаляет столбец из таблицы */
 void Table_window::on_delete_column_button_clicked()
 {
-    if(this->main_conn->get_type_db()=="QMYSQL")
+    if(this->active_connection_to_db->get_type_db()=="QMYSQL")
     {
         QModelIndex index = ui->tableView->currentIndex();
         QString str = this->model->record().fieldName(index.column());
-        QSqlQuery *qry = new QSqlQuery(this->main_conn->get_database());
+        QSqlQuery *qry = new QSqlQuery(this->active_connection_to_db->get_database());
         qry->prepare("ALTER TABLE "+ui->comboBox->currentText()+" DROP "+str);
         qry->exec();
         if(str==""){QMessageBox::warning(this,"warning drop column","choose column");}
         else{QMessageBox::information(this,"drop column","deleted column "+str+"\n"+"reload data!");}
     }
-    if(this->main_conn->get_type_db()=="QSQLITE")
+    if(this->active_connection_to_db->get_type_db()=="QSQLITE")
     {
         QMessageBox::warning(this,"Внимание!","Недоступно для SQLITE базы!");
     }
@@ -100,43 +103,7 @@ void Table_window::on_delete_column_button_clicked()
 
 }
 
-/*** функция вызывается при нажатии кнопки as csv;
-     сохраняет данные из выбраной таблицы в файл в формате .csv */
-void Table_window::on_save_as_file_button_clicked()
-{
-    QString text_data;
-    int rows = this->model->rowCount();
-    int columns = this->model->columnCount();
-    for(int k=0; k< columns; k++)
-    {
-        text_data += this->model->headerData(k,Qt::Horizontal,Qt::DisplayRole).toString();
-        text_data += ";";
-    }
-    text_data += "\n";
 
-    for(int i=0; i< rows; i++)
-    {
-        for(int j=0; j<columns; j++){
-            text_data += this->model->data(this->model->index(i,j)).toString();
-            text_data += ";";
-        }
-    text_data += "\n";
-    }
-    QFile csv_file(ui->add_filename_line->text());
-
-    if(csv_file.open(QIODevice::WriteOnly | QIODevice::Truncate)){
-        QTextStream out(&csv_file);
-        out << text_data;
-
-        csv_file.close();
-
-        QMessageBox::information(this,"Save","File saved as "+ui->add_filename_line->text());
-    }
-    else
-    {
-        QMessageBox::warning(this,"Save","Enter correct filename!");
-    }
-}
 
 /*** функция вызывается при нажатии кнопки connect;
      загружает данные из выбранной таблицы */
@@ -148,14 +115,14 @@ void Table_window::on_connect_button_2_clicked()
     int rez = w->exec();
     if(QDialog::Accepted==rez)
     {
-        this->main_conn = new Connection_to_db();
-        main_conn->set_type_name(w->get_type_bd());
-        main_conn->set_db_name(w->get_name_bd());
-        main_conn->set_user(w->get_user_bd());
-        main_conn->set_host(w->get_host_bd());
-        main_conn->set_password(w->get_password_bd());
-        main_conn->set_port(w->get_port_bd());
-        main_conn->connect();
+        this->active_connection_to_db = new Connection_to_db();
+        active_connection_to_db->set_type_name(w->get_type_bd());
+        active_connection_to_db->set_db_name(w->get_name_bd());
+        active_connection_to_db->set_user(w->get_user_bd());
+        active_connection_to_db->set_host(w->get_host_bd());
+        active_connection_to_db->set_password(w->get_password_bd());
+        active_connection_to_db->set_port(w->get_port_bd());
+        active_connection_to_db->connect();
 
     }
 }
@@ -164,19 +131,19 @@ void Table_window::on_connect_button_2_clicked()
      загружает названия доступных таблиц из бд в comboBox */
 void Table_window::on_load_tables_button_clicked()
 {
-    if(this->main_conn->get_type_db()=="QMYSQL")
+    if(this->active_connection_to_db->get_type_db()=="QMYSQL")
     {
         QSqlQueryModel *model = new QSqlQueryModel();
-        QSqlQuery *qry = new QSqlQuery(this->main_conn->get_database());
+        QSqlQuery *qry = new QSqlQuery(this->active_connection_to_db->get_database());
         qry->prepare("SHOW TABLES");
         qry->exec();
         model->setQuery(*qry);
         ui->comboBox->setModel(model);
     }
-    if(this->main_conn->get_type_db()=="QSQLITE")
+    if(this->active_connection_to_db->get_type_db()=="QSQLITE")
     {
         QSqlQueryModel *model = new QSqlQueryModel();
-        QSqlQuery *qry = new QSqlQuery(this->main_conn->get_database());
+        QSqlQuery *qry = new QSqlQuery(this->active_connection_to_db->get_database());
         qry->prepare("select name from sqlite_master where type='table'");
         qry->exec();
         model->setQuery(*qry);
@@ -184,20 +151,14 @@ void Table_window::on_load_tables_button_clicked()
     }
 }
 
-/*** функция вызывается при нажатии кнопки .jpg;
-     сохраняет таблицу в формате jpg */
-void Table_window::on_save_as_jpg_file_clicked()
-{
-    ui->tableView->grab().save(ui->add_filename_line->text());
-    QMessageBox::information(this,"Save","File saved as "+ui->add_filename_line->text());
-}
+
 
 /*** функция вызывается при нажатии кнопки add table;
      добавляет таблицу в текущую бд */
 void Table_window::on_add_table_button_clicked()
 {
 
-    QSqlQuery *qry = new QSqlQuery(this->main_conn->get_database());
+    QSqlQuery *qry = new QSqlQuery(this->active_connection_to_db->get_database());
     QString str = ui->line_add_table->text();
     qry->prepare("CREATE TABLE "+str+"( name varchar(30) not null default '-')");
     qry->exec();
@@ -209,7 +170,7 @@ void Table_window::on_add_table_button_clicked()
      удаляет таблицу из бд */
 void Table_window::on_delete_table_button_clicked()
 {
-    QSqlQuery *qry = new QSqlQuery(this->main_conn->get_database());
+    QSqlQuery *qry = new QSqlQuery(this->active_connection_to_db->get_database());
     QString str = ui->line_add_table->text();
     qry->prepare("DROP TABLE "+str);
     qry->exec();
@@ -276,4 +237,85 @@ void Table_window::showTrayIcon()
         connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 
         trayIcon -> show();
+}
+
+
+/******
+ * функции для меню
+*/
+
+/*информация на кнопке about Qt*/
+void Table_window::on_actionabout_QT_triggered()
+{
+    QMessageBox::aboutQt(this,"About QT");
+}
+
+/*кнопка close*/
+void Table_window::on_actionclose_2_triggered()
+{
+    this->close();
+}
+
+/*кнопка developer docs*/
+void Table_window::on_actionAPI_QT_triggered()
+{
+    QDesktopServices::openUrl(QUrl("https://wiki.qt.io/Main/ru", QUrl::TolerantMode));
+}
+
+/*кнопка about*/
+void Table_window::on_actionabout_triggered()
+{
+    QMessageBox::about(this,"about programm"," Created by Mikhail Makarevich \n"
+                                             " in 2017. \n"
+                                             "          \n"
+                                             " Voronezh State University \n"
+                                             " Phisical Department \n"
+                                             " group IS \n"
+                                             " https://github.com/mmakarevich/qt_db");
+
+}
+
+/*кнопка save*/
+void Table_window::on_action_save_file_triggered()
+{
+    QString file_name = QFileDialog::getSaveFileName(this,"save file","C://","CSV File (*.csv) ;; JPG File (*.jpg)");
+
+    if(file_name.contains(".csv"))
+    {
+        QString text_data;
+        int rows = this->model->rowCount();
+        int columns = this->model->columnCount();
+        for(int k=0; k< columns; k++)
+        {
+            text_data += this->model->headerData(k,Qt::Horizontal,Qt::DisplayRole).toString();
+            text_data += ";";
+        }
+        text_data += "\n";
+
+        for(int i=0; i< rows; i++)
+        {
+            for(int j=0; j<columns; j++){
+                text_data += this->model->data(this->model->index(i,j)).toString();
+                text_data += ";";
+            }
+            text_data += "\n";
+        }
+
+        QFile csv_file(file_name);
+
+        if(csv_file.open(QIODevice::WriteOnly | QIODevice::Truncate)){
+            QTextStream out(&csv_file);
+            out << text_data;
+            csv_file.close();
+        }
+
+        QMessageBox::information(this,"Save","File saved as "+file_name);
+    }
+
+    if(file_name.contains(".jpg"))
+    {
+        ui->tableView->grab().save(file_name);
+        QMessageBox::information(this,"Save","File saved as "+file_name);
+    }
+
 }

@@ -5,8 +5,12 @@
 #include <QtSql>
 #include <QSystemTrayIcon>
 #include <QMessageBox>
+#include <QUrl>
+#include <QFileDialog>
+#include <QDesktopServices>
 #include "connection_to_db.h"
 #include "connection_to_db_window.h"
+
 
 namespace Ui {
 class Table_window;
@@ -31,13 +35,9 @@ private slots:
 
     void on_delete_column_button_clicked();
 
-    void on_save_as_file_button_clicked();
-
     void on_connect_button_2_clicked();
 
     void on_load_tables_button_clicked();
-
-    void on_save_as_jpg_file_clicked();
 
     void on_add_table_button_clicked();
 
@@ -51,9 +51,19 @@ private slots:
 
     void showTrayIcon();
 
+    void on_actionabout_QT_triggered();
+
+    void on_actionclose_2_triggered();
+
+    void on_actionAPI_QT_triggered();
+
+    void on_actionabout_triggered();
+
+    void on_action_save_file_triggered();
+
 private:
     Ui::Table_window *ui;
-    Connection_to_db *main_conn;
+    Connection_to_db *active_connection_to_db;
     QSqlTableModel *model;
     Connection_to_db_window *w;
     QMenu *trayIconMenu;
