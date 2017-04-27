@@ -31,6 +31,7 @@ void MainWindow::on_pushButton_clicked()
         this->close();
         table_window = new Table_window();
         table_window->show();
+
     }
     else
     {

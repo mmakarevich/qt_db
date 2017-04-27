@@ -13,13 +13,9 @@ Table_window::Table_window(QWidget *parent) :
     ui(new Ui::Table_window)
 {
     ui->setupUi(this);
-    ui->connect_button_2->click();//автонажатие кнопки connect для соединения с бд;
-
     this -> setTrayIconActions();//трей
     this -> showTrayIcon();
-
-
-
+//    ui->connect_button_2->click();//автонажатие кнопки connect для соединения с бд;
 }
 
 Table_window::~Table_window()
@@ -179,17 +175,17 @@ void Table_window::on_delete_table_button_clicked()
 
 /*** функция перехватывает сворачивание приложения и сворачивает его в трей;
       */
-void Table_window::changeEvent(QEvent *event)
-{
-    QMainWindow::changeEvent(event);
-        if (event -> type() == QEvent::WindowStateChange)
-        {
-            if (isMinimized())
-            {
-                this -> hide();
-            }
-        }
-}
+//void Table_window::changeEvent(QEvent *event)
+//{
+//    QMainWindow::changeEvent(event);
+//        if (event -> type() == QEvent::WindowStateChange)
+//        {
+//            if (isMinimized())
+//            {
+//                this -> hide();
+//            }
+//        }
+//}
 
 /*** функция вызывается при нажатии на иконку в трее ;
      при нажатии левой кнопкой мыши разворачивает приложение */

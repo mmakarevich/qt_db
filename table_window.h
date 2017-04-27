@@ -43,7 +43,7 @@ private slots:
 
     void on_delete_table_button_clicked();
 
-    void changeEvent(QEvent*);
+//    void changeEvent(QEvent*);
 
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
 
